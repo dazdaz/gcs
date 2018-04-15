@@ -1,5 +1,6 @@
-Overview
-========
+## Overview
+
+Update April 2018 : Wrote in 2013 and not tested recently.
 
 I wrote this script as a prood of concept after blogging about how the API to
 the Google Custom Search Engine works.
@@ -39,9 +40,9 @@ search the entire web.
 1. Goto https://www.google.com/cse/all
 2. Create a CSE, enter .www.google.de. and then click create
 3. Then goto Control Panel / Setup / Basics / Sites to search = Search entire web
-
+```
 It looks like .cx: yyyyyyyyyyyyyyyyyyyyy:yyyyyyyyyyy.
-
+```
 Test some queries using the CSE within a web browser before crafting a URL for use with curl.
 https://www.google.com/cse/publicurl?cx=yyyyyyyyyyyyyyyyyyyyy:yyyyyyyyyyy
 
@@ -67,12 +68,12 @@ https://developers.google.com/custom-search/v1/using_rest?hl=en#query-params
 Output is in JSON [JavaScript Object Notation] format.
 
 Each query returns a maximum of 10 results (URL.s and more).
-
+```
 $ curl "https://www.googleapis.com/customsearch/v1?key=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx&cx=yyyyyyyyyyyyyyyyyyyyy:yyyyyyyyyyy&q=Singapore&filter=0&start=1&num=10&alt=json" > search.json
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                  Dload  Upload   Total   Spent    Left  Speed
 100 18389    0 18389    0     0  12291      0 --:--:--  0:00:01 --:--:-- 13984
-
+```
 * If the Dload is more than 1000 bytes in size, then it was successful, else you
   have errors in the output file.
 
@@ -86,9 +87,9 @@ $ sudo wget http://stedolan.github.io/jq/download/linux64/jq -O /usr/local/bin/j
 
 
 Step 5 - Parse the JSON output file, to see our results
-
+```
 $ jq '.items[].link' search.json | awk '{print substr($0, 2, length() - 2)}'
-
+```
 http://en.wikipedia.org/wiki/Singapore
 http://www.singaporeair.com/
 http://www.yoursingapore.com/
@@ -104,7 +105,7 @@ http://www.bbc.co.uk/news/world-asia-15961759
 
 
 When you've reached your daily quota, this is what you will see in the JSON output.
-
+```
 {
 "error": {
 "errors": [
@@ -118,15 +119,14 @@ When you've reached your daily quota, this is what you will see in the JSON outp
 "message": "Daily Limit Exceeded"
 }
 }
-
+```
 
 If you don't encode the query string, you'll see this.
 "Error 400
 Your client has issued a malformed or illegal request."
 
 
-Ideas for improvement
-=====================
+## Ideas for improvement
 Count how many queries per day
 Check json output for maximum free daily quota reached
 Parse results through a link checker to save on wasted time
